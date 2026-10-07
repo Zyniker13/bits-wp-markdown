@@ -4,7 +4,7 @@ WordPress plugin by [Bristlecone IT Services](https://bristleconeit.com). Write 
 
 Plugin homepage: [https://bristleconeit.com/bristlecone-markdown](https://bristleconeit.com/bristlecone-markdown).
 
-Development repository: [https://github.com/Zyniker13/bits-markdown](https://github.com/Zyniker13/bits-markdown).
+Development repository: [https://github.com/Zyniker13/bits-wp-markdown](https://github.com/Zyniker13/bits-wp-markdown).
 
 ## Requirements
 
