@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "homepage": "https://bristleconeit.com/bristlecone-markdown",
   "support": {
-    "issues": "https://github.com/Zyniker13/bits-markdown/issues",
-    "source": "https://github.com/Zyniker13/bits-markdown"
+    "issues": "https://github.com/Zyniker13/bits-wp-markdown/issues",
+    "source": "https://github.com/Zyniker13/bits-wp-markdown"
   },
   "require": {
     "php": ">=8.4.1",

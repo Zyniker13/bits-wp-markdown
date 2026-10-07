@@ -3,7 +3,7 @@
 <!-- impeccable:product-schema 1 -->
 
 <!--
-  Bristlecone Markdown (WordPress plugin, repo Zyniker13/bits-markdown).
+  Bristlecone Markdown (WordPress plugin, repo Zyniker13/bits-wp-markdown).
   Inferred from readme.txt, README.md, docs/plugin-home.md, and the 1.2.0
   block-editor writing-surface brief. Visual direction is not recorded here;
   see DESIGN.md.
