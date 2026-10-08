@@ -32,10 +32,77 @@ namespace Bristlecone\Markdown {
 		\Bristlecone\Markdown\Tests\StorageWpState::$meta[ (int) $post_id ][ (string) $key ] = $value;
 		return true;
 	}
+
+	/**
+	 * Records what WordPress would receive; wp_update_post() expects slashed data.
+	 *
+	 * @param array<string, mixed> $postarr
+	 */
+	function wp_update_post( $postarr = array() ): int {
+		\Bristlecone\Markdown\Tests\StorageWpState::$updates[] = $postarr;
+		return (int) ( $postarr['ID'] ?? 0 );
+	}
+
+	/**
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	function wp_slash( $value ) {
+		return is_array( $value ) ? array_map( __NAMESPACE__ . '\\wp_slash', $value ) : ( is_string( $value ) ? addslashes( $value ) : $value );
+	}
+
+	/**
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	function wp_unslash( $value ) {
+		return is_array( $value ) ? array_map( __NAMESPACE__ . '\\wp_unslash', $value ) : ( is_string( $value ) ? stripslashes( $value ) : $value );
+	}
+
+	function add_filter( ...$args ): bool {
+		return true;
+	}
+
+	function remove_filter( ...$args ): bool {
+		return true;
+	}
+
+	/**
+	 * @param mixed $name
+	 */
+	function get_post_status_object( $name ): ?object {
+		return null;
+	}
+
+	/**
+	 * @param mixed $title
+	 */
+	function sanitize_title( $title ): string {
+		return strtolower( trim( (string) preg_replace( '/[^A-Za-z0-9]+/', '-', (string) $title ), '-' ) );
+	}
+
+	/**
+	 * Approximates core: strips all tags and collapses whitespace.
+	 *
+	 * @param mixed $str
+	 */
+	function sanitize_text_field( $str ): string {
+		return trim( (string) preg_replace( '/\s+/', ' ', strip_tags( (string) $str ) ) );
+	}
+
+	/**
+	 * Approximates core: strips all tags and keeps line breaks.
+	 *
+	 * @param mixed $str
+	 */
+	function sanitize_textarea_field( $str ): string {
+		return trim( strip_tags( (string) $str ) );
+	}
 }
 
 namespace Bristlecone\Markdown\Tests {
 
+	use Bristlecone\Markdown\FrontMatterMapper;
 	use Bristlecone\Markdown\Storage;
 	use PHPUnit\Framework\Attributes\DataProvider;
 	use PHPUnit\Framework\TestCase;
@@ -46,13 +113,17 @@ namespace Bristlecone\Markdown\Tests {
 
 		/** @var array<int, object> */
 		public static array $posts = array();
+
+		/** @var list<array<string, mixed>> */
+		public static array $updates = array();
 	}
 
 	final class StorageTest extends TestCase {
 
 		protected function setUp(): void {
-			StorageWpState::$meta  = array();
-			StorageWpState::$posts = array();
+			StorageWpState::$meta    = array();
+			StorageWpState::$posts   = array();
+			StorageWpState::$updates = array();
 		}
 
 		public function test_markdown_flag_keys_include_jetpack_and_native(): void {
@@ -169,6 +240,70 @@ namespace Bristlecone\Markdown\Tests {
 
 			$this->assertArrayNotHasKey( Storage::META_KEY, StorageWpState::$meta[ 99 ] ?? array() );
 			$this->assertFalse( Storage::instance()->is_markdown_post( 99 ) );
+		}
+
+		public function test_restore_revision_keeps_backslashes_in_markdown(): void {
+			$source = 'Inline math $\\frac{a}{b}$ and \\*literal\\* \\n';
+
+			StorageWpState::$meta[ 50 ]  = array( Storage::META_KEY => 1 );
+			StorageWpState::$posts[ 51 ] = (object) array(
+				'ID'                    => 51,
+				'post_content'          => '<p>old</p>',
+				'post_content_filtered' => $source,
+			);
+
+			Storage::instance()->restore_revision( 50, 51 );
+
+			$this->assertCount( 1, StorageWpState::$updates );
+			// WordPress unslashes wp_update_post() input once; that must yield the original source.
+			$this->assertSame( $source, \Bristlecone\Markdown\wp_unslash( StorageWpState::$updates[0]['post_content'] ) );
+		}
+
+		public function test_resaving_stored_html_keeps_markdown_source(): void {
+			$post_id = 60;
+			$html    = '<p>Back\\slash <em>x</em></p>';
+			$source  = 'Back\\\\slash _x_';
+
+			StorageWpState::$meta[ $post_id ]  = array( Storage::META_KEY => 1 );
+			StorageWpState::$posts[ $post_id ] = (object) array(
+				'ID'                    => $post_id,
+				'post_content'          => $html,
+				'post_content_filtered' => $source,
+			);
+
+			$data = array(
+				'post_type'             => 'post',
+				'post_content'          => addslashes( $html ),
+				'post_content_filtered' => addslashes( $source ),
+			);
+
+			$this->assertSame(
+				$data,
+				Storage::instance()->filter_insert_post_data( $data, array( 'ID' => $post_id ) )
+			);
+		}
+
+		public function test_front_matter_title_and_excerpt_are_plain_text(): void {
+			StorageWpState::$posts[ 70 ] = (object) array(
+				'ID'           => 70,
+				'post_title'   => '',
+				'post_excerpt' => '',
+				'post_name'    => '',
+			);
+
+			FrontMatterMapper::instance()->apply(
+				70,
+				array(
+					'title'   => 'Hello <img src=x onerror=alert(1)>World',
+					'excerpt' => '<script>alert(1)</script>Short \\ note',
+				)
+			);
+
+			$this->assertCount( 1, StorageWpState::$updates );
+			$update = \Bristlecone\Markdown\wp_unslash( StorageWpState::$updates[0] );
+			$this->assertSame( 'Hello World', $update['post_title'] );
+			$this->assertStringNotContainsString( '<', $update['post_excerpt'] );
+			$this->assertStringContainsString( 'Short \\ note', $update['post_excerpt'] );
 		}
 	}
 }

@@ -123,6 +123,10 @@ final class Storage {
 
 		$unslashed = wp_unslash( $content );
 
+		if ( $this->is_unchanged_markdown_save( $post_id, $unslashed ) ) {
+			return $data;
+		}
+
 		if ( has_blocks( $unslashed ) ) {
 			$extracted = $this->extract_document_markdown( $unslashed );
 			if ( is_string( $extracted ) && $extracted !== '' ) {
@@ -148,6 +152,26 @@ final class Storage {
 		return $data;
 	}
 
+	/**
+	 * True when a save resends the stored HTML of a Markdown post unchanged.
+	 *
+	 * Bulk edit, importers, and other plugins calling wp_update_post() pass the
+	 * rendered HTML back. Converting it would overwrite the Markdown source in
+	 * post_content_filtered, so those saves keep the stored source and HTML.
+	 */
+	private function is_unchanged_markdown_save( int $post_id, string $unslashed ): bool {
+		if ( $post_id <= 0 || ! $this->is_markdown_post( $post_id ) ) {
+			return false;
+		}
+
+		$stored = get_post( $post_id );
+		if ( ! is_object( $stored ) || (string) ( $stored->post_content_filtered ?? '' ) === '' ) {
+			return false;
+		}
+
+		return (string) $stored->post_content === $unslashed;
+	}
+
 	public function on_insert_post( int $post_id, $post ): void {
 		if ( ! isset( $this->pending[ $post_id ] ) && ! isset( $this->pending[0] ) ) {
 			return;
@@ -171,9 +195,11 @@ final class Storage {
 				$result                = $this->convert( $source, array( 'id' => (string) $post_id ) );
 				$this->skip_conversion = true;
 				wp_update_post(
-					array(
-						'ID'           => $post_id,
-						'post_content' => $result->html,
+					wp_slash(
+						array(
+							'ID'           => $post_id,
+							'post_content' => $result->html,
+						)
 					)
 				);
 				$this->skip_conversion = false;
@@ -216,9 +242,11 @@ final class Storage {
 
 		add_filter( 'wp_revisions_to_keep', '__return_false', 99 );
 		wp_update_post(
-			array(
-				'ID'           => $post_id,
-				'post_content' => $revision->post_content_filtered,
+			wp_slash(
+				array(
+					'ID'           => $post_id,
+					'post_content' => $revision->post_content_filtered,
+				)
 			)
 		);
 		remove_filter( 'wp_revisions_to_keep', '__return_false', 99 );

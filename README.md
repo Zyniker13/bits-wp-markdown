@@ -54,4 +54,4 @@ Build a production zip (single root folder `bristlecone-markdown`, Composer `--n
 composer release
 ```
 
-The zip is written to `dist/bristlecone-markdown-1.0.0.zip`. Upload that file at [Add Your Plugin](https://wordpress.org/plugins/developers/add/). After approval, tag updates go through WordPress.org SVN; this GitHub repository stays the development tree.
+The zip is written to `dist/bristlecone-markdown-{version}.zip`, using the version in the plugin header. Upload that file at [Add Your Plugin](https://wordpress.org/plugins/developers/add/). After approval, tag updates go through WordPress.org SVN; this GitHub repository stays the development tree.
