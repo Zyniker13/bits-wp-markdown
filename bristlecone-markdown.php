@@ -3,9 +3,9 @@
  * Plugin Name: Bristlecone Markdown
  * Plugin URI: https://bristleconeit.com/bristlecone-markdown
  * Description: Markdown for WordPress without Jetpack. Write in the block editor, Classic Editor, comments, or from iA Writer, with syntax aligned to iA Writer.
- * Version: 1.3.1
+ * Version: 1.3.2
  * Requires at least: 6.4
- * Requires PHP: 8.4
+ * Requires PHP: 8.3
  * Author: Bristlecone IT Services
  * Author URI: https://bristleconeit.com
  * License: GPL-2.0-or-later
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BRISTLECONE_MARKDOWN_VERSION', '1.3.1' );
+define( 'BRISTLECONE_MARKDOWN_VERSION', '1.3.2' );
 define( 'BRISTLECONE_MARKDOWN_FILE', __FILE__ );
 define( 'BRISTLECONE_MARKDOWN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BRISTLECONE_MARKDOWN_URL', plugin_dir_url( __FILE__ ) );

@@ -69,6 +69,16 @@ class Inline
         $i = 0;
         $isQuoted = null;
         $tag = self::parseTag($value, $i, $flags);
+
+        // a tag without value, possibly followed by a comment
+        if (null !== $tag && '' !== $tag && (!isset($value[$i]) || '#' === $value[$i])) {
+            if (str_starts_with($tag, 'php/')) {
+                throw new ParseException(\sprintf('Missing value for tag "%s".', $tag), self::$parsedLineNumber + 1, $value, self::$parsedFilename);
+            }
+
+            return new TaggedValue($tag, '');
+        }
+
         switch ($value[$i]) {
             case '[':
                 $result = self::parseSequence($state, $value, $flags, $i, $references);
@@ -257,10 +267,6 @@ class Inline
             $output[] = \sprintf('%s: %s', self::dump($key, $keyFlags), self::dump($val, $flags));
         }
 
-        if (!$output) {
-            return '{}';
-        }
-
         return \sprintf('{ %s }', implode(', ', $output));
     }
 
@@ -406,6 +412,10 @@ class Inline
                     continue;
                 }
 
+                if (!isset($sequence[$i])) {
+                    break;
+                }
+
                 switch ($sequence[$i]) {
                     case '[':
                         // nested sequence
@@ -526,7 +536,7 @@ class Inline
                 if (!$isKeyQuoted) {
                     $evaluatedKey = self::evaluateScalar($state, $key, $flags, $references);
 
-                    if ('' !== $key && $evaluatedKey !== $key && !\is_string($evaluatedKey) && !\is_int($evaluatedKey)) {
+                    if ('' !== $key && $evaluatedKey !== $key && (!\is_string($evaluatedKey) || '!' === $key[0]) && !\is_int($evaluatedKey)) {
                         throw new ParseException('Implicit casting of incompatible mapping keys to strings is not supported. Quote your evaluable mapping keys instead.', self::$parsedLineNumber + 1, $mapping);
                     }
                 }
@@ -563,6 +573,10 @@ class Inline
                             }
                         }
                         continue 2;
+                    }
+
+                    if (!isset($mapping[$i])) {
+                        break;
                     }
 
                     switch ($mapping[$i]) {
@@ -691,6 +705,9 @@ class Inline
                 return false;
             case '!' === $scalar[0]:
                 switch (true) {
+                    case '!!str' === $scalar:
+                    case '!!binary' === $scalar:
+                        return '';
                     case str_starts_with($scalar, '!!str '):
                         $s = substr($scalar, 6);
 
@@ -708,13 +725,7 @@ class Inline
                                 throw new ParseException('Missing value for tag "!php/object".', self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
                             }
 
-                            $serialized = self::parseScalar(substr($scalar, 12));
-
-                            if (!\is_scalar($serialized ?? '') && !$serialized instanceof \Stringable) {
-                                throw new ParseException(\sprintf('The "!php/object" tag only supports a string value, got "%s".', get_debug_type($serialized)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
-                            }
-
-                            return unserialize((string) $serialized, ['allowed_classes' => true]);
+                            return unserialize(self::parseScalar(substr($scalar, 12)), ['allowed_classes' => true]);
                         }
 
                         if (self::$exceptionOnInvalidType) {
@@ -729,15 +740,7 @@ class Inline
                             }
 
                             $i = 0;
-                            $const = self::parseScalar(substr($scalar, 11), 0, null, $i, false);
-
-                            if (!\is_scalar($const ?? '') && !$const instanceof \Stringable) {
-                                throw new ParseException(\sprintf('The "!php/const" tag only supports a string value, got "%s".', get_debug_type($const)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
-                            }
-
-                            $const = (string) $const;
-
-                            if (\defined($const)) {
+                            if (\defined($const = self::parseScalar(substr($scalar, 11), 0, null, $i, false))) {
                                 return \constant($const);
                             }
 
@@ -756,12 +759,6 @@ class Inline
 
                             $i = 0;
                             $enumName = self::parseScalar(substr($scalar, 10), 0, null, $i, false);
-
-                            if (!\is_scalar($enumName ?? '') && !$enumName instanceof \Stringable) {
-                                throw new ParseException(\sprintf('The "!php/enum" tag only supports a string value, got "%s".', get_debug_type($enumName)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
-                            }
-
-                            $enumName = (string) $enumName;
                             $useName = str_contains($enumName, '::');
                             $enum = $useName ? strstr($enumName, '::', true) : $enumName;
 
@@ -918,10 +915,6 @@ class Inline
             throw new ParseException(\sprintf('The built-in tag "!%s" is not implemented.', $tag), self::$parsedLineNumber + 1, $value, self::$parsedFilename);
         }
 
-        if ('' !== $tag && !isset($value[$i])) {
-            throw new ParseException(\sprintf('Missing value for tag "%s".', $tag), self::$parsedLineNumber + 1, $value, self::$parsedFilename);
-        }
-
         if ('' === $tag || Yaml::PARSE_CUSTOM_TAGS & $flags) {
             return $tag;
         }
@@ -931,7 +924,11 @@ class Inline
 
     public static function evaluateBinaryScalar(string $scalar): string
     {
-        $parsedBinaryData = self::parseScalar(preg_replace('/\s/', '', $scalar));
+        $parsedBinaryData = preg_replace('/\s/', '', $scalar);
+
+        if ('' === $parsedBinaryData || '' === $parsedBinaryData = self::parseScalar($parsedBinaryData)) {
+            return '';
+        }
 
         if (!\is_scalar($parsedBinaryData ?? '') && !$parsedBinaryData instanceof \Stringable) {
             throw new ParseException(\sprintf('The "!!binary" tag only supports a base64 encoded string, got "%s".', get_debug_type($parsedBinaryData)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);

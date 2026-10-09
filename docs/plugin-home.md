@@ -12,7 +12,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 | **Product name** | Bristlecone Markdown |
 | **Slug** | `bristlecone-markdown` |
 | **Vendor** | Bristlecone IT Services |
-| **Version described** | 1.3.1 |
+| **Version described** | 1.3.2 |
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
 | **Price** | Fully free. No paid tier, no phone-home, no account. |
 | **WordPress.org listing** | In submission. Do not claim it is listed until it is. A “Download” control may say it will be available on WordPress.org, with GitHub as the current source. |
@@ -31,7 +31,7 @@ Professional, precise, and short. Company site for Bristlecone IT Services — n
 - Task-list conversion (`- [ ]` / `- [x]`). Those stay as text.
 - File transclusion / iA Writer Content Blocks. WordPress cannot see the local library; authors must compile in iA Writer first.
 - Tracking, analytics, or a remote conversion API. Parsing runs on the WordPress site. KaTeX and syntax highlighting are bundled.
-- Compatibility below **WordPress 6.4** or **PHP 8.4**. iA Writer’s Publish command needs WordPress 5.6+ Application Passwords; the plugin itself requires 6.4+.
+- Compatibility below **WordPress 6.4** or **PHP 8.3**. iA Writer’s Publish command needs WordPress 5.6+ Application Passwords; the plugin itself requires 6.4+.
 - “100% identical to the CommonMark dingus” for the *production* parser. Production enables extras and HTML restrictions (see Standards). The test suite includes the full CommonMark 0.31.2 spec against a core-only converter, plus a production ledger for expected deviations.
 - The directory tag `jetpack` on WordPress.org.
 
@@ -76,7 +76,7 @@ It is a self-contained replacement for **Jetpack’s Markdown module only**, not
 | Requirement | Version |
 | --- | --- |
 | WordPress | 6.4 or later (tested up to 7.1) |
-| PHP | 8.4 or later |
+| PHP | 8.3 or later |
 | Block editor | Gutenberg Markdown block (`bristlecone/markdown`) |
 | Classic Editor / REST / iA Writer | Whole-document Markdown for selected post types |
 | iA Writer Publish | WordPress Application Passwords (WordPress 5.6+) |
@@ -270,7 +270,7 @@ This is defense in depth, not a claim of a formal security certification.
 | `post_content` / `post_content_filtered` | Same split Jetpack Markdown used |
 | `wpautop` | Disabled for document-mode Markdown posts and Markdown comments so footnote and block HTML stay intact |
 
-Requires WordPress **6.4+**, PHP **8.4+**. Tested up to WordPress **7.1**.
+Requires WordPress **6.4+**, PHP **8.3+**. Tested up to WordPress **7.1**.
 
 ### Licensing of the plugin and bundled libraries
 
