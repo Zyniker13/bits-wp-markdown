@@ -31,8 +31,10 @@ final class FrontMatterMapper {
 		$update = array( 'ID' => $post_id );
 		$post   = get_post( $post_id );
 
+		// Front matter is author-controlled and is applied as whoever saves the post,
+		// which may be an editor with unfiltered_html. Keep title and excerpt plain text.
 		if ( ! empty( $map['title'] ) && is_scalar( $map['title'] ) ) {
-			$title             = (string) $map['title'];
+			$title             = sanitize_text_field( (string) $map['title'] );
 			$auto_draft_titles = array( '', 'Auto Draft' );
 			$auto_draft_status = get_post_status_object( 'auto-draft' );
 			if ( $auto_draft_status && is_string( $auto_draft_status->label ) && $auto_draft_status->label !== '' ) {
@@ -44,9 +46,9 @@ final class FrontMatterMapper {
 		}
 
 		if ( ! empty( $map['excerpt'] ) && is_scalar( $map['excerpt'] ) && $post && $post->post_excerpt === '' ) {
-			$update['post_excerpt'] = (string) $map['excerpt'];
+			$update['post_excerpt'] = sanitize_textarea_field( (string) $map['excerpt'] );
 		} elseif ( ! empty( $map['description'] ) && is_scalar( $map['description'] ) && $post && $post->post_excerpt === '' ) {
-			$update['post_excerpt'] = (string) $map['description'];
+			$update['post_excerpt'] = sanitize_textarea_field( (string) $map['description'] );
 		}
 
 		if ( ! empty( $map['slug'] ) && is_scalar( $map['slug'] ) ) {
@@ -57,7 +59,7 @@ final class FrontMatterMapper {
 
 		if ( count( $update ) > 1 ) {
 			remove_filter( 'wp_insert_post_data', array( Storage::instance(), 'filter_insert_post_data' ), 10 );
-			wp_update_post( $update );
+			wp_update_post( wp_slash( $update ) );
 			add_filter( 'wp_insert_post_data', array( Storage::instance(), 'filter_insert_post_data' ), 10, 2 );
 		}
 

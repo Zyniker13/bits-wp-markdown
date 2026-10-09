@@ -4,7 +4,7 @@ Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,11 @@ New previews and new saves omit the permalink `#` glyph. HTML already stored in 
 
 == Changelog ==
 
+= 1.3.1 =
+* Security: titles and excerpts set from YAML front matter are now saved as plain text, so markup in front matter cannot reach the page title or excerpt when another user saves the post.
+* Backslashes in Markdown source (for example LaTeX such as `\frac` or escaped `\*`) are no longer dropped when a new post is saved or a revision is restored.
+* Saving a Markdown post without changing its content (bulk edit, importers, or other plugins updating the post) no longer replaces the Markdown source with HTML.
+
 = 1.3.0 =
 * Settings live under the shared Bristlecone admin menu (Bristlecone → Markdown) instead of Settings → Bristlecone Markdown. The same parent is reused when Bristlecone Admin Styles is active; this plugin creates it when standing alone.
 * Bookmarks to `options-general.php?page=bristlecone-markdown` redirect to `admin.php?page=bristlecone-markdown`.
@@ -154,6 +159,9 @@ New previews and new saves omit the permalink `#` glyph. HTML already stored in 
 * Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+Security and data-safety fix for front matter titles, backslashes in Markdown source, and bulk edits. Recommended for all sites.
 
 = 1.3.0 =
 Settings moved to Bristlecone → Markdown. Old Settings bookmarks redirect to the new page.
