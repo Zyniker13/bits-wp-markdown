@@ -9,7 +9,7 @@ Development repository: [https://github.com/Zyniker13/bits-wp-markdown](https://
 ## Requirements
 
 - WordPress 6.4+
-- PHP 8.4+
+- PHP 8.3+
 
 ## Development
 

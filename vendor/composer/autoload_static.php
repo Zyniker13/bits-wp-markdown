@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInit15bf25365698e333dca4dc0faedf89a7
 {
     public static $files = array (
-        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
@@ -16,32 +16,32 @@ class ComposerStaticInit15bf25365698e333dca4dc0faedf89a7
     );
 
     public static $prefixLengthsPsr4 = array (
-        'S' =>
+        'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\Yaml\\' => 23,
         ),
-        'P' =>
+        'P' => 
         array (
             'Psr\\EventDispatcher\\' => 20,
             'PhpParser\\' => 10,
         ),
-        'N' =>
+        'N' => 
         array (
             'Nette\\' => 6,
         ),
-        'L' =>
+        'L' => 
         array (
             'League\\Config\\' => 14,
             'League\\CommonMark\\' => 18,
         ),
-        'D' =>
+        'D' => 
         array (
             'Dflydev\\DotAccessData\\' => 22,
             'DeepCopy\\' => 9,
         ),
-        'B' =>
+        'B' => 
         array (
             'Bristlecone\\Markdown\\Tests\\' => 27,
             'Bristlecone\\Markdown\\' => 21,
@@ -49,65 +49,65 @@ class ComposerStaticInit15bf25365698e333dca4dc0faedf89a7
     );
 
     public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Php80\\' =>
+        'Symfony\\Polyfill\\Php80\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Symfony\\Polyfill\\Ctype\\' =>
+        'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Component\\Yaml\\' =>
+        'Symfony\\Component\\Yaml\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
-        'Psr\\EventDispatcher\\' =>
+        'Psr\\EventDispatcher\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
         ),
-        'PhpParser\\' =>
+        'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'Nette\\' =>
+        'Nette\\' => 
         array (
             0 => __DIR__ . '/..' . '/nette/schema/src',
             1 => __DIR__ . '/..' . '/nette/utils/src',
         ),
-        'League\\Config\\' =>
+        'League\\Config\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/config/src',
         ),
-        'League\\CommonMark\\' =>
+        'League\\CommonMark\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/commonmark/src',
         ),
-        'Dflydev\\DotAccessData\\' =>
+        'Dflydev\\DotAccessData\\' => 
         array (
             0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
         ),
-        'DeepCopy\\' =>
+        'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Bristlecone\\Markdown\\Tests\\' =>
+        'Bristlecone\\Markdown\\Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'Bristlecone\\Markdown\\' =>
+        'Bristlecone\\Markdown\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'H' =>
+        'H' => 
         array (
-            'Highlight\\' =>
+            'Highlight\\' => 
             array (
                 0 => __DIR__ . '/..' . '/scrivo/highlight.php',
             ),
-            'HighlightUtilities\\' =>
+            'HighlightUtilities\\' => 
             array (
                 0 => __DIR__ . '/..' . '/scrivo/highlight.php',
             ),
@@ -165,12 +165,15 @@ class ComposerStaticInit15bf25365698e333dca4dc0faedf89a7
         'Bristlecone\\Markdown\\Tests\\ConflictMatrixTest' => __DIR__ . '/../..' . '/tests/ConflictMatrixTest.php',
         'Bristlecone\\Markdown\\Tests\\DefaultMarkdownEditorTest' => __DIR__ . '/../..' . '/tests/DefaultMarkdownEditorTest.php',
         'Bristlecone\\Markdown\\Tests\\DocumentFixtureTest' => __DIR__ . '/../..' . '/tests/DocumentFixtureTest.php',
+        'Bristlecone\\Markdown\\Tests\\EditorAestheticsTest' => __DIR__ . '/../..' . '/tests/EditorAestheticsTest.php',
         'Bristlecone\\Markdown\\Tests\\ExtrasTest' => __DIR__ . '/../..' . '/tests/ExtrasTest.php',
         'Bristlecone\\Markdown\\Tests\\JetpackMarkdownBlockTest' => __DIR__ . '/../..' . '/tests/JetpackMarkdownBlockTest.php',
         'Bristlecone\\Markdown\\Tests\\MarkdownBlockScannerTest' => __DIR__ . '/../..' . '/tests/MarkdownBlockScannerTest.php',
+        'Bristlecone\\Markdown\\Tests\\MenuRegistrationTest' => __DIR__ . '/../..' . '/tests/MenuRegistrationTest.php',
         'Bristlecone\\Markdown\\Tests\\ParserTest' => __DIR__ . '/../..' . '/tests/ParserTest.php',
         'Bristlecone\\Markdown\\Tests\\PreprocessorTest' => __DIR__ . '/../..' . '/tests/PreprocessorTest.php',
         'Bristlecone\\Markdown\\Tests\\SanitizerTest' => __DIR__ . '/../..' . '/tests/SanitizerTest.php',
+        'Bristlecone\\Markdown\\Tests\\StorageTest' => __DIR__ . '/../..' . '/tests/StorageTest.php',
         'Bristlecone\\Markdown\\Tests\\Support\\HtmlNormalizer' => __DIR__ . '/../..' . '/tests/Support/HtmlNormalizer.php',
         'Bristlecone\\Markdown\\Tests\\Support\\SpecExamples' => __DIR__ . '/../..' . '/tests/Support/SpecExamples.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',

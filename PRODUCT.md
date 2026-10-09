@@ -42,7 +42,7 @@ A self-contained replacement for **Jetpack’s Markdown features only**, not the
 
 Confirmed:
 
-- Requires WordPress 6.4+ and PHP 8.4+.
+- Requires WordPress 6.4+ and PHP 8.3+.
 - No bundler, webpack, or `@wordpress/scripts` for the block. Editor UI is an IIFE using `wp.element`, `wp.blockEditor`, `wp.components`.
 - Preview HTML comes from the PHP parser, not a client Markdown library. The `html` attribute is persisted on the owned block as a deactivate fallback.
 - KaTeX and highlight assets are bundled; loaded only when needed.

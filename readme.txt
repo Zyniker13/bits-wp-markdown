@@ -3,8 +3,8 @@ Contributors: bristleconeit
 Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
-Requires PHP: 8.4
-Stable tag: 1.3.1
+Requires PHP: 8.3
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,9 @@ New previews and new saves omit the permalink `#` glyph. HTML already stored in 
 
 == Changelog ==
 
+= 1.3.2 =
+* Runs on PHP 8.3, 8.4 and 8.5. The minimum PHP version is now 8.3 (was 8.4).
+
 = 1.3.1 =
 * Security: titles and excerpts set from YAML front matter are now saved as plain text, so markup in front matter cannot reach the page title or excerpt when another user saves the post.
 * Backslashes in Markdown source (for example LaTeX such as `\frac` or escaped `\*`) are no longer dropped when a new post is saved or a revision is restored.
@@ -159,6 +162,9 @@ New previews and new saves omit the permalink `#` glyph. HTML already stored in 
 * Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+Adds support for PHP 8.3 and 8.5. No changes to how the plugin works.
 
 = 1.3.1 =
 Security and data-safety fix for front matter titles, backslashes in Markdown source, and bulk edits. Recommended for all sites.
